@@ -47,7 +47,7 @@ func (h *Hoop) Get(key string) (string, error) {
 func (h *Hoop) Add(nodes ...string) {
 	for replica := 0; replica < h.replicas; replica++ {
 		for _, node := range nodes {
-			hash := hash(fmt.Sprintf("%v:%v", replica, node))
+			hash := hash(nodeKey(replica, node))
 			h.nodesHashes = append(h.nodesHashes, hash)
 			h.nodesMap[hash] = node
 		}
@@ -62,7 +62,7 @@ func (h *Hoop) Remove(nodes ...string) {
 
 	for replica := 0; replica < h.replicas; replica++ {
 		for _, node := range nodes {
-			hash := hash(fmt.Sprintf("%v:%v", replica, node))
+			hash := hash(nodeKey(replica, node))
 			toDelete[hash] = true
 			delete(h.nodesMap, hash)
 
@@ -86,4 +86,8 @@ func (h *Hoop) isEmpty() bool {
 
 func hash(data string) int {
 	return int(crc32.ChecksumIEEE([]byte(data)))
+}
+
+func nodeKey(replica int, node string) string {
+	return fmt.Sprintf("%v:%v", replica, node)
 }
