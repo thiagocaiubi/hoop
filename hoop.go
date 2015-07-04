@@ -50,11 +50,34 @@ func (h *Hoop) Add(nodes ...string) {
 			hash := hash(fmt.Sprintf("%v:%v", replica, node))
 			h.nodesHashes = append(h.nodesHashes, hash)
 			h.nodesMap[hash] = node
-
 		}
 	}
 
 	sort.Ints(h.nodesHashes)
+}
+
+func (h *Hoop) Remove(nodes ...string) {
+	toDelete := make(map[int]bool)
+	aux := []int{}
+
+	for replica := 0; replica < h.replicas; replica++ {
+		for _, node := range nodes {
+			hash := hash(fmt.Sprintf("%v:%v", replica, node))
+			toDelete[hash] = true
+			delete(h.nodesMap, hash)
+
+		}
+	}
+
+	for _, nodeHash := range h.nodesHashes {
+		if toDelete[nodeHash] {
+			continue
+		}
+
+		aux = append(aux, nodeHash)
+	}
+
+	h.nodesHashes = aux
 }
 
 func (h *Hoop) isEmpty() bool {
