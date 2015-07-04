@@ -43,3 +43,38 @@ func TestGet(t *testing.T) {
 		t.Errorf("Expected \"%s\" but got \"%s\"", nodes[2], node2)
 	}
 }
+
+func TestAdd(t *testing.T) {
+	nodes := []string{
+		"node0",
+	}
+
+	h := New(nodes, replicas)
+
+	node0, _ := h.Get("beta")
+
+	if node0 != nodes[0] {
+		t.Errorf("Expected \"%s\" but got \"%s\"", nodes[0], node0)
+	}
+
+	h.Add("node1")
+	h.Add("node2")
+
+	node0, _ = h.Get("beta")
+
+	if node0 != nodes[0] {
+		t.Errorf("Expected \"%s\" but got \"%s\"", nodes[0], node0)
+	}
+
+	node1, _ := h.Get("alpha")
+
+	if node1 != "node1" {
+		t.Errorf("Expected \"%s\" but got \"%s\"", "node1", node1)
+	}
+
+	node2, _ := h.Get("lambda")
+
+	if node2 != "node2" {
+		t.Errorf("Expected \"%s\" but got \"%s\"", "node2", node2)
+	}
+}

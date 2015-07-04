@@ -21,15 +21,7 @@ func New(nodes []string, replicas int) *Hoop {
 		nodesMap: make(map[int]string),
 	}
 
-	for _, node := range nodes {
-		for i := 0; i < replicas; i++ {
-			hash := hash(fmt.Sprintf("%v:%v", i, node))
-			h.nodesHashes = append(h.nodesHashes, hash)
-			h.nodesMap[hash] = node
-		}
-	}
-
-	sort.Ints(h.nodesHashes)
+	h.Add(nodes...)
 
 	return h
 }
@@ -50,6 +42,19 @@ func (h *Hoop) Get(key string) (string, error) {
 	}
 
 	return h.nodesMap[h.nodesHashes[pos]], nil
+}
+
+func (h *Hoop) Add(nodes ...string) {
+	for replica := 0; replica < h.replicas; replica++ {
+		for _, node := range nodes {
+			hash := hash(fmt.Sprintf("%v:%v", replica, node))
+			h.nodesHashes = append(h.nodesHashes, hash)
+			h.nodesMap[hash] = node
+
+		}
+	}
+
+	sort.Ints(h.nodesHashes)
 }
 
 func (h *Hoop) isEmpty() bool {
