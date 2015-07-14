@@ -1,6 +1,7 @@
 package hoop
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -113,4 +114,22 @@ func TestRemove(t *testing.T) {
 	if node2 != nodes[2] {
 		t.Errorf("Expected \"%s\" but got \"%s\"", nodes[2], node2)
 	}
+}
+
+func BenchmarkGet(b *testing.B) {
+	nodes := []string{
+		"node0",
+		"node1",
+		"node2",
+	}
+
+	results := make(map[string]int, len(nodes))
+
+	h := New(nodes, replicas)
+	for i := 0; i < b.N; i++ {
+		node, _ := h.Get(fmt.Sprintf("key:%d", i))
+		results[node] += 1
+	}
+
+	fmt.Println(results)
 }
