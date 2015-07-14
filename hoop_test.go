@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-const replicas = 3
+const replicas = 13
 
 func TestEmpty(t *testing.T) {
 	h := New([]string{}, replicas)

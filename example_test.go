@@ -11,7 +11,7 @@ func ExampleHoop_Get() {
 		"node0",
 		"node1",
 		"node2",
-	}, 3)
+	}, 13)
 
 	node, err := h.Get("alpha")
 
